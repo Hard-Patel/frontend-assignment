@@ -3,11 +3,9 @@ import { nodeTypes } from "./nodes/nodeConfig";
 
 export const PipelineToolbar = () => {
   return (
-    <div style={{ padding: "10px" }}>
+    <div style={{ padding: "10px 25px", boxShadow: '1px 1px 6px rgba(47, 47, 47, 0.5)' }}>
       <div
         style={{
-          marginTop: "20px",
-          marginLeft: "20px",
           display: "flex",
           flexWrap: "wrap",
           gap: "10px",
