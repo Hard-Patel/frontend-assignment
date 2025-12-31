@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Position } from "reactflow";
 import { BaseNode } from "./base/baseNode";
+import { MustacheTextarea } from "../components/MustacheTextarea";
 
 export const TextNode = ({ id, data, type }) => {
   const [currText, setCurrText] = useState(data?.text || "{{input}}");
 
-  const handleTextChange = (e) => {
-    setCurrText(e.target.value);
+  const handleTextChange = (text) => {
+    setCurrText(text);
   };
 
   const handles = [
@@ -19,13 +20,12 @@ export const TextNode = ({ id, data, type }) => {
 
   return (
     <BaseNode id={id} nodeType={type} title="Text" handles={handles}>
-      <label>
+      <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         Text:
-        <input
-          type="text"
+        <MustacheTextarea
           value={currText}
           onChange={handleTextChange}
-          className="border"
+          className="w-full"
         />
       </label>
     </BaseNode>
