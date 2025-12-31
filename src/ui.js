@@ -5,6 +5,11 @@ import { InputNode } from "./nodes/inputNode";
 import { LLMNode } from "./nodes/llmNode";
 import { OutputNode } from "./nodes/outputNode";
 import { TextNode } from "./nodes/textNode";
+import { ConditionNode } from "./nodes/conditionNode";
+import { FormatterNode } from "./nodes/formatterNode";
+import { TransformNode } from "./nodes/transformNode";
+import { WebhookNode } from "./nodes/webhookNode";
+import { ValidatorNode } from "./nodes/validatorNode";
 import { useStore } from "./store";
 
 import "reactflow/dist/style.css";
@@ -16,6 +21,11 @@ const nodeTypes = {
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  condition: ConditionNode,
+  formatter: FormatterNode,
+  transform: TransformNode,
+  webhook: WebhookNode,
+  validator: ValidatorNode,
 };
 
 const selector = (state) => ({
@@ -42,7 +52,11 @@ export const PipelineUI = () => {
   } = useStore(selector, shallow);
 
   const getInitNodeData = (nodeID, type) => {
-    let nodeData = { id: nodeID, nodeType: `${type}` };
+    let nodeData = {
+      id: nodeID,
+      nodeType: `${type}`,
+      name: nodeID,
+    };
     return nodeData;
   };
 

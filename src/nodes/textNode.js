@@ -25,7 +25,7 @@ export const TextNode = ({ id, data, type }) => {
           type="text"
           value={currText}
           onChange={handleTextChange}
-          style={{ width: "100%", boxSizing: "border-box" }}
+          className="border"
         />
       </label>
     </BaseNode>

@@ -11,12 +11,15 @@ export const BaseNode = ({
   width = 200,
   minHeight = 80,
   handles = [],
+  showName = true,
   children,
 }) => {
   const derivedType = nodeType || (id ? id.split("-")[0] : null);
   const nodeConfig = getNodeConfig(derivedType);
   const Icon = nodeConfig.icon;
-  const deleteNode = useStore((state) => state.deleteNode);
+  const { deleteNode, updateNodeField, getNodeName } = useStore(
+    (state) => state
+  );
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -90,7 +93,12 @@ export const BaseNode = ({
           id={handle.id}
           type={handle.type}
           position={handle.position}
-          style={handle.style}
+          style={{
+            ...handle.style,
+            height: 8,
+            width: 8,
+            background: "#684f9e",
+          }}
         />
       ))}
 
@@ -111,13 +119,36 @@ export const BaseNode = ({
           </div>
           <FiX
             size={14}
-            style={{ cursor: "pointer", color: "#666" }}
+            className="cursor-pointer hover:bg-danger-500/20 rounded-full hover:text-danger-500 text-primary-500"
             onClick={handleDelete}
           />
         </div>
       )}
 
-      <div style={{ padding: 6, boxSizing: "border-box" }}>{children}</div>
+      <div style={{ padding: 6, boxSizing: "border-box" }}>
+        {showName && (
+          <div
+            className="nodrag"
+            contentEditable
+            suppressContentEditableWarning
+            spellCheck={false}
+            onBlur={(e) =>
+              updateNodeField(id, "name", e.currentTarget.textContent)
+            }
+            style={{
+              background: "#E8E4F0",
+              borderRadius: 4,
+              padding: "4px 8px",
+              marginBottom: 4,
+              outline: "none",
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {getNodeName(id)}
+          </div>
+        )}
+        {children}
+      </div>
     </div>
   );
 };

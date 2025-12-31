@@ -1,5 +1,5 @@
 import { CgFormatText } from "react-icons/cg";
-import { FiArrowRight, FiArrowLeft, FiZap } from "react-icons/fi";
+import { FiArrowRight, FiArrowLeft, FiZap, FiGitBranch, FiType, FiRefreshCw, FiGlobe, FiShield } from "react-icons/fi";
 
 export const nodeTypes = [
   {
@@ -21,6 +21,31 @@ export const nodeTypes = [
     type: "llm",
     label: "LLM",
     icon: FiZap,
+  },
+  {
+    type: "condition",
+    label: "Condition",
+    icon: FiGitBranch,
+  },
+  {
+    type: "formatter",
+    label: "Formatter",
+    icon: FiType,
+  },
+  {
+    type: "transform",
+    label: "Transform",
+    icon: FiRefreshCw,
+  },
+  {
+    type: "webhook",
+    label: "Webhook",
+    icon: FiGlobe,
+  },
+  {
+    type: "validator",
+    label: "Validator",
+    icon: FiShield,
   },
 ];
 

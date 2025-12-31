@@ -1,30 +1,36 @@
 import { Position } from "reactflow";
 import { BaseNode } from "./base/baseNode";
 
-export const LLMNode = ({ id, data, type }) => {
+export const ConditionNode = ({ id, data, type }) => {
   const handles = [
     {
-      id: `${id}-system`,
+      id: `${id}-value`,
       type: "target",
       position: Position.Left,
     },
     {
-      id: `${id}-prompt`,
+      id: `${id}-condition`,
       type: "target",
       position: Position.Left,
     },
     {
-      id: `${id}-response`,
+      id: `${id}-true`,
+      type: "source",
+      position: Position.Right,
+    },
+    {
+      id: `${id}-false`,
       type: "source",
       position: Position.Right,
     },
   ];
 
   return (
-    <BaseNode id={id} nodeType={type} title="LLM" handles={handles}>
+    <BaseNode id={id} nodeType={type} title="Condition" handles={handles}>
       <div>
-        <span>This is a LLM.</span>
+        <span>Branch logic based on a condition</span>
       </div>
     </BaseNode>
   );
 };
+

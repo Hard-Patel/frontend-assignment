@@ -16,7 +16,11 @@ export const useStore = create((set, get) => ({
     }
     newIDs[type] += 1;
     set({ nodeIDs: newIDs });
-    return `${type}-${newIDs[type]}`;
+    return `${type}_${newIDs[type]}`;
+  },
+  getNodeName: (nodeID) => {
+    const node = get().nodes.find((node) => node.id === nodeID);
+    return node?.data?.name;
   },
   addNode: (node) => {
     set({
