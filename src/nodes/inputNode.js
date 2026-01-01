@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Position } from "reactflow";
 import { BaseNode } from "./base/baseNode";
 
 export const InputNode = ({ id, data, type }) => {
@@ -9,20 +8,17 @@ export const InputNode = ({ id, data, type }) => {
     setInputType(e.target.value);
   };
 
-  const handles = [
-    {
-      id: `${id}-value`,
-      type: "source",
-      position: Position.Right,
-    },
-  ];
-
   return (
-    <BaseNode id={id} nodeType={type} title="Input" handles={handles}>
-      <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        Type
+    <BaseNode
+      id={id}
+      nodeType={type}
+      title="Input"
+      handles={data?.handles ?? []}
+    >
+      <label className="flex flex-col gap-1 text-sm">
+        <span>Type</span>
         <select
-          className="border"
+          className="border rounded px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-primary-500"
           value={inputType}
           onChange={handleTypeChange}
         >

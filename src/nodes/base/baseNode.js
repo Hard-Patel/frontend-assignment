@@ -27,6 +27,7 @@ export const BaseNode = ({
       deleteNode(id);
     }
   };
+
   const positionedHandles = useMemo(() => {
     const handlesByPosition = {
       [Position.Left]: [],
@@ -76,22 +77,13 @@ export const BaseNode = ({
   }, [handles]);
 
   const sourceKeys = useMemo(() => {
-    return handles
-      .filter((h) => h.type === "source")
-      .map((h) => h.id.split("-")[1]);
+    return handles.filter((h) => h.type === "source").map((h) => h.id);
   }, [handles]);
 
   return (
     <div
-      style={{
-        width,
-        minHeight,
-        border: "1px solid #c0bacd",
-        borderRadius: 4,
-        padding: 2,
-        background: "#fff",
-        position: "relative",
-      }}
+      className="relative p-[2px] border rounded w-[200px] min-h-[80px] bg-white"
+      style={{ width, minHeight }}
     >
       {positionedHandles.map((handle) => (
         <Handle
@@ -99,70 +91,44 @@ export const BaseNode = ({
           id={handle.id}
           type={handle.type}
           position={handle.position}
-          style={{
-            ...handle.style,
-            height: 8,
-            width: 8,
-            background: "#684f9e",
-          }}
+          style={handle.style}
+          className="h-2 w-2 bg-primary-400"
         />
       ))}
 
       {title && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "8px 12px",
-            background: "#E8E4F0",
-            borderRadius: 4,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div className="flex items-center justify-between px-3 py-2 rounded bg-node-background">
+          <div className="flex items-center gap-2">
             <Icon size={16} />
-            <span style={{ fontWeight: 600, color: "#000" }}>{title}</span>
+            <span className="font-semibold text-black">{title}</span>
           </div>
           <FiX
             size={14}
-            className="cursor-pointer hover:bg-danger-500/20 rounded-full hover:text-danger-500 text-primary-500"
             onClick={handleDelete}
+            className="cursor-pointer rounded-full text-primary-500 hover:bg-danger-500/20 hover:text-danger-500"
           />
         </div>
       )}
 
-      <div style={{ padding: 6, boxSizing: "border-box" }}>
+      <div className="p-[6px] box-border">
         {showName && (
           <div
-            className="nodrag"
+            className="nodrag mb-1 rounded bg-node-background px-2 py-1 outline-none whitespace-pre-wrap"
             contentEditable
             suppressContentEditableWarning
             spellCheck={false}
             onBlur={(e) =>
               updateNodeField(id, "name", e.currentTarget.textContent)
             }
-            style={{
-              background: "#E8E4F0",
-              borderRadius: 4,
-              padding: "4px 8px",
-              marginBottom: 4,
-              outline: "none",
-              whiteSpace: "pre-wrap",
-            }}
           >
             {getNodeName(id)}
           </div>
         )}
+
         {children}
 
         {sourceKeys.length > 0 && (
-          <div
-            style={{
-              marginTop: 6,
-              fontSize: 12,
-              color: "#555",
-            }}
-          >
+          <div className="mt-1.5 text-xs text-[#555]">
             Output: {sourceKeys.join(", ")}
           </div>
         )}

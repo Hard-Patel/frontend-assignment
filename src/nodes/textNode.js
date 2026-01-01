@@ -1,45 +1,38 @@
-import { useEffect, useMemo, useState } from "react";
-import { Position } from "reactflow";
+import { useEffect, useMemo } from "react";
+import { MustacheTextarea } from "../components/MustacheTextarea";
 import { useStore } from "../store";
 import { BaseNode } from "./base/baseNode";
-import { MustacheTextarea } from "../components/MustacheTextarea";
 
 const extractVariables = (text) =>
   (text.match(/\{\{(.*?)\}\}/g) || []).map((v) => v.replace(/[{}]/g, ""));
 
 export const TextNode = ({ id, data, type }) => {
-  const [currText, setCurrText] = useState(data?.text || "{{input}}");
-  const { syncVariableEdges } = useStore((state) => state);
+  const { updateNodeField, syncVariableEdges, nodes } = useStore(
+    (state) => state
+  );
+  const currText = nodes.find((n) => n.id === id)?.data?.text ?? "";
 
   const variables = useMemo(() => {
-    return extractVariables(currText);
+    return extractVariables(currText ?? "");
   }, [currText]);
 
   const handleTextChange = (text) => {
-    setCurrText(text);
+    updateNodeField(id, "text", text);
   };
-
-  const handles = [
-    ...variables.map((v) => ({
-      id: `${id}-${v}`, // target handle id
-      type: "target",
-      position: Position.Left,
-    })),
-    {
-      id: `${id}-output`,
-      type: "source",
-      position: Position.Right,
-    },
-  ];
 
   useEffect(() => {
     syncVariableEdges(id, variables);
-  }, [variables]);
+  }, [id, syncVariableEdges, variables]);
 
   return (
-    <BaseNode id={id} nodeType={type} title="Text" handles={handles}>
-      <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        Text:
+    <BaseNode
+      id={id}
+      nodeType={type}
+      title="Text"
+      handles={data?.handles ?? []}
+    >
+      <label className="flex flex-col gap-1 text-sm">
+        <span>Text</span>
         <MustacheTextarea
           value={currText}
           onChange={handleTextChange}

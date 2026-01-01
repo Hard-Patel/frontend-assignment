@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Position } from "reactflow";
 import { BaseNode } from "./base/baseNode";
 
 export const WebhookNode = ({ id, data, type }) => {
@@ -14,56 +13,33 @@ export const WebhookNode = ({ id, data, type }) => {
     setPayload(e.target.value);
   };
 
-  const handles = [
-    {
-      id: `${id}-url`,
-      type: "target",
-      position: Position.Left,
-    },
-    {
-      id: `${id}-payload`,
-      type: "target",
-      position: Position.Left,
-    },
-    {
-      id: `${id}-success`,
-      type: "source",
-      position: Position.Right,
-    },
-    {
-      id: `${id}-error`,
-      type: "source",
-      position: Position.Right,
-    },
-  ];
-
   return (
-    <BaseNode id={id} nodeType={type} title="Webhook" handles={handles}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          URL
+    <BaseNode
+      id={id}
+      nodeType={type}
+      title="Webhook"
+      handles={data?.handles ?? []}
+    >
+      <div className="flex flex-col gap-2">
+        <label className="flex flex-col gap-1 text-sm">
+          <span>URL</span>
           <input
             type="text"
-            className="border"
             value={url}
             onChange={handleUrlChange}
             placeholder="https://api.example.com/webhook"
-            style={{ width: "100%", boxSizing: "border-box" }}
+            className="w-full border rounded px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-primary-500"
           />
         </label>
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          Payload
+
+        <label className="flex flex-col gap-1 text-sm">
+          <span>Payload</span>
           <textarea
             value={payload}
             onChange={handlePayloadChange}
             placeholder='{"key": "value"}'
             rows={4}
-            className="border"
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              resize: "none",
-            }}
+            className="w-full border rounded px-2 py-1 text-sm resize-none outline-none focus:ring-1 focus:ring-primary-500"
           />
         </label>
       </div>

@@ -11,43 +11,56 @@ export const useStore = create((set, get) => ({
   edges: [],
   syncVariableEdges: (targetNodeId, variables) => {
     set((state) => {
-      const existingVariableEdges = state.edges.filter(
-        (e) => e.target === targetNodeId && e.data?.isVariableEdge
-      );
+      const nodesById = new Map(state.nodes.map((n) => [n.id, n]));
+      variables = [...new Set(variables)];
 
-      const desiredKeys = new Set(
-        variables.map(
-          (v) => `${v}|${v}-value|${targetNodeId}|${targetNodeId}-${v}`
-        )
-      );
+      const targetNode = nodesById.get(targetNodeId);
 
-      const keptEdges = existingVariableEdges.filter((e) =>
-        desiredKeys.has(
-          `${e.source}|${e.sourceHandle}|${e.target}|${e.targetHandle}`
-        )
-      );
+      const generatedVariableIds = variables.map((v) => {
+        const [source = "", sourceHandleKey = ""] = v.split(".");
+        return `reactflow__edge-${source}-${sourceHandleKey}-${targetNodeId}`;
+      });
 
-      const existingKeys = new Set(
-        keptEdges.map(
-          (e) => `${e.source}|${e.sourceHandle}|${e.target}|${e.targetHandle}`
-        )
-      );
+      const existingEdges = state.edges?.filter((e) => {
+        return (
+          e?.target !== targetNodeId ||
+          (e?.target === targetNodeId && generatedVariableIds.includes(e?.id))
+        );
+      });
+
+      const existingEdgeIds = existingEdges.map((e) => e.id);
 
       const newEdges = variables
-        .filter(
-          (v) =>
-            !existingKeys.has(
-              `${v}|${v}-value|${targetNodeId}|${targetNodeId}-${v}`
-            )
-        )
         .map((v) => {
-          const [source = '', sourceHandle = ''] = v.split(".");
+          const [source = "", sourceHandleKey = ""] = v.split(".");
+
+          const sourceNode = nodesById.get(source);
+          if (!sourceNode || !sourceHandleKey || !targetNode) return null;
+
+          const sourceHandleId = sourceHandleKey;
+          const targetHandleId = "input";
+
+          const sourceHandles = sourceNode.data?.handles || [];
+          const targetHandles = targetNode.data?.handles || [];
+
+          const hasSourceHandle = sourceHandles.some(
+            (h) => h.id === sourceHandleId
+          );
+          const hasTargetHandle = targetHandles.some(
+            (h) => h.id === targetHandleId
+          );
+
+          if (!hasSourceHandle || !hasTargetHandle) return null;
+
+          const newId = `reactflow__edge-${source}-${sourceHandleId}-${targetNodeId}`;
+          if (existingEdgeIds.includes(newId)) return null;
+
           return {
-            id: `reactflow__edge-${v}-${targetNodeId}-${v}`,
-            source: source,
-            sourceHandle: `${source}-${sourceHandle}`,
+            id: newId,
+            source,
+            sourceHandle: sourceHandleId,
             target: targetNodeId,
-            targetHandle: `${targetNodeId}-${v}`,
+            targetHandle: targetHandleId,
             type: "smoothstep",
             animated: true,
             markerEnd: {
@@ -57,15 +70,11 @@ export const useStore = create((set, get) => ({
             },
             data: { isVariableEdge: true },
           };
-        });
+        })
+        .filter(Boolean);
 
-      const nonVariableEdges = state.edges.filter(
-        (e) => e.target !== targetNodeId || !e.data?.isVariableEdge
-      );
-
-      console.log('newEdges: ', newEdges);
       return {
-        edges: [...nonVariableEdges, ...keptEdges, ...newEdges],
+        edges: [...existingEdges, ...newEdges],
       };
     });
   },
@@ -99,18 +108,57 @@ export const useStore = create((set, get) => ({
     });
   },
   onConnect: (connection) => {
-    set({
-      edges: addEdge(
+    set((state) => {
+      const edges = addEdge(
         {
           ...connection,
           type: "smoothstep",
           animated: true,
-          markerEnd: { type: MarkerType.Arrow, height: "20px", width: "20px" },
+          markerEnd: {
+            type: MarkerType.Arrow,
+            height: "20px",
+            width: "20px",
+          },
         },
-        get().edges
-      ),
+        state.edges
+      );
+
+      const { source, sourceHandle, target } = connection;
+      if (!source || !sourceHandle || !target) {
+        return { edges };
+      }
+
+      const targetNode = state.nodes.find((n) => n.id === target);
+      if (!targetNode || targetNode.type !== "text") {
+        return { edges };
+      }
+
+      const variable = `{{${source}.${sourceHandle}}}`;
+      const currentText = targetNode.data?.text || "";
+
+      if (currentText.includes(variable)) {
+        return { edges };
+      }
+
+      const updatedNodes = state.nodes.map((n) => {
+        if (n.id !== target) return n;
+
+        return {
+          ...n,
+          data: {
+            ...n.data,
+            text: currentText ? `${currentText} ${variable}`.trim() : variable,
+          },
+        };
+      });
+
+      return {
+        edges,
+        nodes: updatedNodes,
+      };
     });
   },
+
   updateNodeField: (nodeId, fieldName, fieldValue) => {
     set({
       nodes: get().nodes.map((node) => {

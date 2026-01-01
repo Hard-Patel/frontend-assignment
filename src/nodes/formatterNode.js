@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Position } from "reactflow";
 import { BaseNode } from "./base/baseNode";
 
 export const FormatterNode = ({ id, data, type }) => {
@@ -9,25 +8,17 @@ export const FormatterNode = ({ id, data, type }) => {
     setFormatType(e.target.value);
   };
 
-  const handles = [
-    {
-      id: `${id}-input`,
-      type: "target",
-      position: Position.Left,
-    },
-    {
-      id: `${id}-output`,
-      type: "source",
-      position: Position.Right,
-    },
-  ];
-
   return (
-    <BaseNode id={id} nodeType={type} title="Formatter" handles={handles}>
-      <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        Format
+    <BaseNode
+      id={id}
+      nodeType={type}
+      title="Formatter"
+      handles={data?.handles ?? []}
+    >
+      <label className="flex flex-col gap-1 text-sm">
+        <span>Format</span>
         <select
-          className="border"
+          className="border rounded px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-primary-500"
           value={formatType}
           onChange={handleFormatChange}
         >

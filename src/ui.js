@@ -1,18 +1,19 @@
 import { useCallback, useRef, useState } from "react";
 import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
 import { shallow } from "zustand/shallow";
+import { ConditionNode } from "./nodes/conditionNode";
+import { FormatterNode } from "./nodes/formatterNode";
 import { InputNode } from "./nodes/inputNode";
 import { LLMNode } from "./nodes/llmNode";
 import { OutputNode } from "./nodes/outputNode";
 import { TextNode } from "./nodes/textNode";
-import { ConditionNode } from "./nodes/conditionNode";
-import { FormatterNode } from "./nodes/formatterNode";
 import { TransformNode } from "./nodes/transformNode";
-import { WebhookNode } from "./nodes/webhookNode";
 import { ValidatorNode } from "./nodes/validatorNode";
+import { WebhookNode } from "./nodes/webhookNode";
 import { useStore } from "./store";
 
 import "reactflow/dist/style.css";
+import { getInitHandlesByType } from "./utils/functions";
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
@@ -56,6 +57,7 @@ export const PipelineUI = () => {
       id: nodeID,
       nodeType: `${type}`,
       name: nodeID,
+      handles: getInitHandlesByType(type),
     };
     return nodeData;
   };

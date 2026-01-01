@@ -3,14 +3,8 @@ import { nodeTypes } from "./nodes/nodeConfig";
 
 export const PipelineToolbar = () => {
   return (
-    <div style={{ padding: "10px 25px", boxShadow: '1px 1px 6px rgba(47, 47, 47, 0.5)' }}>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-        }}
-      >
+    <div className="px-[25px] py-[10px] shadow-[1px_1px_6px_rgba(47,47,47,0.5)]">
+      <div className="flex flex-wrap gap-[10px]">
         {nodeTypes.map((nodeConfig) => (
           <DraggableNode
             key={nodeConfig.type}
