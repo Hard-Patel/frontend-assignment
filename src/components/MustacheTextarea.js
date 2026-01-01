@@ -49,7 +49,7 @@ function setCaretPosition(el, position) {
 
 function normalizeMustache(text) {
   return text.replace(/\{\{(.*?)\}\}/g, (_, content) => {
-    const sanitized = content.replace(/[^a-zA-Z0-9_]/g, "_");
+    const sanitized = content.replace(/[^a-zA-Z0-9._-]/g, "_");
     return `{{${sanitized}}}`;
   });
 }

@@ -18,7 +18,7 @@ export const InputNode = ({ id, data, type }) => {
   ];
 
   return (
-    <BaseNode id={id} nodeType={type} title="Text" handles={handles}>
+    <BaseNode id={id} nodeType={type} title="Input" handles={handles}>
       <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         Type
         <select

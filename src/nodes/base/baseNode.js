@@ -75,6 +75,12 @@ export const BaseNode = ({
     return result;
   }, [handles]);
 
+  const sourceKeys = useMemo(() => {
+    return handles
+      .filter((h) => h.type === "source")
+      .map((h) => h.id.split("-")[1]);
+  }, [handles]);
+
   return (
     <div
       style={{
@@ -148,6 +154,18 @@ export const BaseNode = ({
           </div>
         )}
         {children}
+
+        {sourceKeys.length > 0 && (
+          <div
+            style={{
+              marginTop: 6,
+              fontSize: 12,
+              color: "#555",
+            }}
+          >
+            Output: {sourceKeys.join(", ")}
+          </div>
+        )}
       </div>
     </div>
   );
