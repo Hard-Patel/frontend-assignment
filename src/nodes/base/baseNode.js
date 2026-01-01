@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { FiX } from "react-icons/fi";
 import { Handle, Position } from "reactflow";
 import { useStore } from "../../store";
-import { getNodeConfig } from "../nodeConfig";
+import { getNodeConfig } from "./nodeConfig";
 
 export const BaseNode = ({
   id,

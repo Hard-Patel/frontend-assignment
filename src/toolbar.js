@@ -1,5 +1,5 @@
 import { DraggableNode } from "./draggableNode";
-import { nodeTypes } from "./nodes/nodeConfig";
+import { nodeTypes } from "./nodes/base/nodeConfig";
 
 export const PipelineToolbar = () => {
   return (
